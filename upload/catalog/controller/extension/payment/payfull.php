@@ -1,9 +1,9 @@
 <?php
-class ControllerPaymentPayfull extends Controller {
+class ControllerExtensionPaymentPayfull extends Controller {
 
 	public function index() {
 
-		$this->language->load('payment/payfull');
+		$this->language->load('extension/payment/payfull');
 
 		$data['entry_payfull_installmet'] 	= $this->language->get('entry_payfull_installmet');
 		$data['entry_payfull_amount'] 		= $this->language->get('entry_payfull_amount');
@@ -75,18 +75,18 @@ class ControllerPaymentPayfull extends Controller {
 		$total 		= $this->currency->format($order_info['total'], $order_info['currency_code'], true, true);
 		$data['total']         = $total;
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/payfull.tpl')) {
-			return $this->load->view($this->config->get('config_template') . '/template/payment/payfull.tpl', $data);
+		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payfull.tpl')) {
+			return $this->load->view($this->config->get('config_template') . '/template/extension/payment/payfull.tpl', $data);
 		} else {
-			return $this->load->view('payment/payfull.tpl', $data);
+			return $this->load->view('extension/payment/payfull.tpl', $data);
 		}
 	}
 
 	public function get_card_info(){
 		$this->load->model('checkout/order');
-		$this->load->model('payment/payfull');
+		$this->load->model('extension/payment/payfull');
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $order_info['total'] = $this->model_payment_payfull->getOneShotTotal($order_info['total']);
+        $order_info['total'] = $this->model_extension_payment_payfull->getOneShotTotal($order_info['total']);
         $payfull_3dsecure_status 	= $this->config->get('payfull_3dsecure_status');
         $payfull_installment_status = $this->config->get('payfull_installment_status');
 
@@ -106,8 +106,8 @@ class ControllerPaymentPayfull extends Controller {
 		}
 
 		//get info from API about bank + card + instalments
-		$card_info  		 = json_decode($this->model_payment_payfull->get_card_info(), true);
-		$installments_info 	 = json_decode($this->model_payment_payfull->getInstallments(), true);
+		$card_info  		 = json_decode($this->model_extension_payment_payfull->get_card_info(), true);
+		$installments_info 	 = json_decode($this->model_extension_payment_payfull->getInstallments(), true);
 		$bank_info 			 = array();
 
 		//no bank is detected
@@ -271,7 +271,7 @@ class ControllerPaymentPayfull extends Controller {
 	}
 
 	public function send(){
-		$this->load->model('payment/payfull');
+		$this->load->model('extension/payment/payfull');
 
 		$json = array();
 
@@ -282,7 +282,7 @@ class ControllerPaymentPayfull extends Controller {
 			exit;
 		}
 
-		$response                           = $this->model_payment_payfull->send();
+		$response                           = $this->model_extension_payment_payfull->send();
 		$responseData                       = json_decode($response, true);
         $responseData['extra_installments'] = isset($responseData['extra_installments'])?$responseData['extra_installments']:0;
         $responseData['campaign_id']        = isset($responseData['campaign_id'])?$responseData['campaign_id']:0;
@@ -291,7 +291,7 @@ class ControllerPaymentPayfull extends Controller {
         if (isset($responseData['ErrorCode'])) {
 			//for successful payment without error
 			if($responseData['ErrorCode'] == '00'){
-                $this->model_payment_payfull->saveResponse($responseData);
+                $this->model_extension_payment_payfull->saveResponse($responseData);
 
                 $this->addSubTotalForInstCommission($responseData);
 
@@ -304,7 +304,7 @@ class ControllerPaymentPayfull extends Controller {
 		}else{
 			$this->db->query('insert into `'.DB_PREFIX.'payfull_3d_form` SET html="'.htmlspecialchars($response).'"');
 			$this->session->data['payfull_3d_form_id'] = $this->db->getLastId();
-			$json['success'] = $this->url->link('payment/payfull/secure');
+			$json['success'] = $this->url->link('extension/payment/payfull/secure');
 		}
 		
 		echo json_encode($json);
@@ -312,7 +312,7 @@ class ControllerPaymentPayfull extends Controller {
 
     public function addSubTotalForInstCommission($responseData){
         $this->load->model('checkout/order');
-        $this->language->load('payment/payfull');
+        $this->language->load('extension/payment/payfull');
         $installmentsCommissionFound        = false;
         $order_info                         = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $payfull_commission_sub_total_title = $this->language->get('commission_sub_total_title');
@@ -320,7 +320,7 @@ class ControllerPaymentPayfull extends Controller {
         $installments_number                = 1;
         $installments_commission            = 0;
 
-        $installments_info 	= $this->model_payment_payfull->getInstallments();
+        $installments_info 	= $this->model_extension_payment_payfull->getInstallments();
         $installments_info  = json_decode($installments_info, true);
         foreach($installments_info['data'] as $temp) {
             if($temp['bank'] == $responseData['bank_id']) {
@@ -361,7 +361,7 @@ class ControllerPaymentPayfull extends Controller {
     }
 
 	public function validatePaymentData(){
-		$this->language->load('payment/payfull');
+		$this->language->load('extension/payment/payfull');
 		$error = [];
 
 		if(!isset($this->request->post['cc_name']) OR $this->request->post['cc_name'] == ''){
@@ -488,7 +488,7 @@ class ControllerPaymentPayfull extends Controller {
 	}
 
 	public function callback() {
-		$this->load->model('payment/payfull');
+		$this->load->model('extension/payment/payfull');
 
         $post = $this->request->post;
 
@@ -501,7 +501,7 @@ class ControllerPaymentPayfull extends Controller {
         $post['campaign_id']        = isset($post['campaign_id'])?$post['campaign_id']:0;
 
 		//save response 
-		$this->model_payment_payfull->saveResponse($post);
+		$this->model_extension_payment_payfull->saveResponse($post);
 
 		if (isset($post['passive_data'])) {
 			$order_id = $post['passive_data'];

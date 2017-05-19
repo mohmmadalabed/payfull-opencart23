@@ -1,6 +1,6 @@
 <?php
 
-class ModelPaymentPayfull extends Model {
+class ModelExtensionPaymentPayfull extends Model {
 
 	public function install() {
 		$this->db->query("

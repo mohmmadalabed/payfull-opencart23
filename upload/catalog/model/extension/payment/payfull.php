@@ -1,6 +1,6 @@
 <?php
 
-class ModelPaymentPayfull extends Model {
+class ModelExtensionPaymentPayfull extends Model {
 
 	public function getInstallments(){
 		$params = array(
@@ -127,7 +127,7 @@ class ModelPaymentPayfull extends Model {
 				"language"        => 'tr',
 				"client_ip"       => $_SERVER['REMOTE_ADDR'],
 				"payment_title"   => 'Order #'.$order_info['order_id'],
-				"return_url"      => $this->url->link('payment/payfull/callback'),
+				"return_url"      => $this->url->link('extension/payment/payfull/callback'),
 				"bank_id"         => 'BKMExpress',
 
 				"customer_firstname" => $order_info['firstname'],
@@ -154,7 +154,7 @@ class ModelPaymentPayfull extends Model {
 				"client_ip"       => $_SERVER['REMOTE_ADDR'],
 				"payment_title"   => 'Order #'.$order_info['order_id'],
 				"use3d"           => $user3d,
-				"return_url"      => $this->url->link('payment/payfull/callback'),
+				"return_url"      => $this->url->link('extension/payment/payfull/callback'),
 
 				"customer_firstname" => $order_info['firstname'],
 				"customer_lastname"  => $order_info['lastname'],
@@ -229,7 +229,7 @@ class ModelPaymentPayfull extends Model {
 	}
 
 	public function getMethod($address, $total) {
-		$this->load->language('payment/payfull');
+		$this->load->language('extension/payment/payfull');
 
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('cod_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 

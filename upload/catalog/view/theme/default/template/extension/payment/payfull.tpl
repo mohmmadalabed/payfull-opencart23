@@ -148,7 +148,7 @@
 
     confirmButton.bind('click', function() {
   $.ajax({
-    url: 'index.php?route=payment/payfull/send',
+    url: 'index.php?route=extension/payment/payfull/send',
     type: 'post',
     data: $('#payment select, #payment input[type="text"], #payment input[type="hidden"], #payment input[type="checkbox"]:checked, #payment input[type="radio"]:checked' ),
     dataType: 'json',
@@ -218,7 +218,7 @@
 
     function refreshInstallmentOptions(){
         $.ajax({
-            url: 'index.php?route=payment/payfull/get_card_info',
+            url: 'index.php?route=extension/payment/payfull/get_card_info',
             type: 'post',
             data: $('#payment :input'),
             dataType: 'json',
@@ -319,7 +319,7 @@
         var containerSelectorInst = $('.extra_installments_select');
 
         $.ajax({
-            url: 'index.php?route=payment/payfull/get_extra_installments&inst='+selectedInstallmentCount+'&bank='+selectedInstallmentBank,
+            url: 'index.php?route=extension/payment/payfull/get_extra_installments&inst='+selectedInstallmentCount+'&bank='+selectedInstallmentBank,
             type: 'post',
             data: $('#payment :input'),
             dataType: 'json',
