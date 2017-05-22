@@ -62,7 +62,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_payment'),
-			'href' => $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL')
+			'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL')
 		);
 
 		$data['breadcrumbs'][] = array(
@@ -72,7 +72,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		$data['action'] = $this->url->link('extension/payment/payfull', 'token=' . $this->session->data['token'], 'SSL');
 
-		$data['cancel'] = $this->url->link('extension/extension', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
 
 		if (isset($this->request->post['payfull_endpoint'])) {
 			$data['payfull_endpoint'] = $this->request->post['payfull_endpoint'];

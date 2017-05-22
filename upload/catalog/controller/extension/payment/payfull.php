@@ -168,7 +168,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		//get info from API about extra instalments
 		$extraInstallmentsAndInstallmentsArr = [];
-		$extra_installments_info 	         = json_decode($this->model_payment_payfull->getExtraInstallments(), true);
+		$extra_installments_info 	         = json_decode($this->model_extension_payment_payfull->getExtraInstallments(), true);
 		if(isset($extra_installments_info['data']['campaigns'])) {
 			foreach($extra_installments_info['data']['campaigns'] as $extra_installments_row){
 				if(

@@ -198,7 +198,6 @@ class ModelExtensionPaymentPayfull extends Model {
 
 		$api_url = $this->config->get('payfull_endpoint');
 
-
         //begin HASH calculation
         ksort($params);
         $hashString = "";
