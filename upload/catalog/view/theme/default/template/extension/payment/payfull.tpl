@@ -7,7 +7,7 @@
           <li><a href="javascript:void(0)" class="tablinks bkmTab" onclick="openPaymentMethod(event, 'bkmPaymentMethod')"><img class="bkmImage" src="<?php echo $payfull_banks_images; ?>BKM.png"></a></li>
       </ul>
      <?php else:?>
-      <legend><?php echo $text_credit_card; ?></legend>
+      <legend><?php echo $text_credit_card; ?><img class="payfullLogoCh" src="<?php echo $payfull_banks_images; ?>payfull-logo.png"></legend>
     <?php endif;?>
 
     <?php if($payfull_bkm_status):?>
@@ -471,4 +471,8 @@
       display: block;
       margin:0 auto;
   }
+  .payfullLogoCh{
+      max-width: 140px;
+      margin-left: 15px;
+
 </style>
