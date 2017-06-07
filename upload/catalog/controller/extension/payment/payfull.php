@@ -72,7 +72,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		$this->load->model('checkout/order');
 		$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-		$total 		= $this->currency->format($order_info['total'], $order_info['currency_code'], true, true);
+		$total 		= $this->currency->format($order_info['total'], $order_info['currency_code'], false, true);
 		$data['total']         = $total;
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/extension/payment/payfull.tpl')) {
@@ -142,7 +142,8 @@ class ControllerExtensionPaymentPayfull extends Controller {
         }elseif($networkBankFoundArr){
             $bank_info = $networkBankFoundArr;
         }
-        
+
+
         //still there is no one shot commission
         if(!count($bank_info)) {
             header('Content-type: text/json');
@@ -187,11 +188,11 @@ class ControllerExtensionPaymentPayfull extends Controller {
 			$commission = $installment['commission'];
 			$commission = str_replace('%', '', $commission);
 			$total      = $order_info['total'] + ($order_info['total'] * $commission/100);
-			$total      = $this->currency->format($total, $order_info['currency_code'], true, true);
+			$total      = $this->currency->format($total, $order_info['currency_code'], false, true);
 			$bank_info['installments'][$justNormalKey]['total'] = $total;
 
 			$installment_total = ($order_info['total'] + ($order_info['total'] * $commission/100))/$installment['count'];
-			$installment_total = $this->currency->format($installment_total, $order_info['currency_code'], true, true);
+			$installment_total = $this->currency->format($installment_total, $order_info['currency_code'], false, true);
 			$bank_info['installments'][$justNormalKey]['installment_total'] = $installment_total;
 
 			if($this->config->get('payfull_extra_installment_status')){
