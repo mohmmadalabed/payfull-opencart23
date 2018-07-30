@@ -168,7 +168,8 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 		//get info from API about extra instalments
 		$extraInstallmentsAndInstallmentsArr = [];
-		$extra_installments_info 	         = json_decode($this->model_payment_payfull->getExtraInstallments(), true);
+
+		$extra_installments_info 	         = @json_decode($this->model_extension_payment_payfull->getExtraInstallments(), true);
 		if(isset($extra_installments_info['data']['campaigns'])) {
 			foreach($extra_installments_info['data']['campaigns'] as $extra_installments_row){
 				if(
@@ -216,9 +217,9 @@ class ControllerExtensionPaymentPayfull extends Controller {
 
 	public function get_extra_installments(){
 		$this->load->model('checkout/order');
-		$this->load->model('payment/payfull');
+		$this->load->model('extension/payment/payfull');
 		$order_info 		= $this->model_checkout_order->getOrder($this->session->data['order_id']);
-		$installments_info  = json_decode($this->model_payment_payfull->getInstallments(), true);
+		$installments_info  = json_decode($this->model_extension_payment_payfull->getInstallments(), true);
 
 		//default data
 		$total              = $this->currency->format($order_info['total'], $order_info['currency_code'], false, false);
@@ -244,7 +245,7 @@ class ControllerExtensionPaymentPayfull extends Controller {
 		}
 
 		//get info from API about extra instalments
-		$extra_installments_info 	= json_decode($this->model_payment_payfull->getExtraInstallments(), true);
+		$extra_installments_info 	= json_decode($this->model_extension_payment_payfull->getExtraInstallments(), true);
 
 		//no correct response
 		if(!isset($extra_installments_info['data']['campaigns'])) {
